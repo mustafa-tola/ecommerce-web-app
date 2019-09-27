@@ -4,7 +4,6 @@ import { addToCart } from "../../redux/actions/cartActions";
 
 class Home extends Component {
     handleClick = (id) => {
-        console.log(id);
         this.props.addToCart(id);
     }
     render() {
@@ -14,7 +13,7 @@ class Home extends Component {
                     <div className="card-image">
                         <img src={product.img} alt={product.title} />
                         <h3 className="card-title" style={{ "color": "black" }}>{product.title}</h3>
-                        <span to="/" className="btn-floating halfway-fab waves-effect waves-light red" onClick={(product) => {console.log(product.id); this.handleClick(product.id)}}><i className="material-icons">add</i></span>
+                        <span to="/" className="btn-floating halfway-fab waves-effect waves-light red" onClick={() => this.handleClick(product._id)}><i className="material-icons">add</i></span>
                     </div>
 
                     <div className="card-content">
@@ -44,9 +43,8 @@ const MapStateToProps = (state) => {
 }
 
 const MapDispatchToProps = (dispatch) => {
-    console.log(dispatch);
     return {
-        id,
+        addToCart: (id) => dispatch(addToCart(id)),
     }
 }
 

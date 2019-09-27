@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, ADD_QUANTITY, SUB_QUANTITY, LOGIN, LOGOUT,FETCH_PRODUCT, FETCHED_PRODUCT } from "../actions/action-types/cartActionsTypes"
+import { ADD_TO_CART, REMOVE_FROM_CART, ADD_QUANTITY, SUB_QUANTITY, LOGIN, LOGOUT, FETCH_PRODUCT, FETCHED_PRODUCT } from "../actions/action-types/cartActionsTypes"
 
 const firstState = {
     products: [
@@ -16,37 +16,51 @@ const firstState = {
 }
 
 const cartReducer = (state = firstState, action) => {
-    if(action.type === ADD_TO_CART){
-        let addedItem = state.products.find(item=> {console.log(item.id,action.id); return item.id === action.id});
-        console.log(addedItem);
+    if (action.type === ADD_TO_CART) {
+        let addedItem;
+        for (let item in state.products) {
+            if (state.products[item]._id === action.id) {
+                addedItem = state.products[item];
+            }
+        }
         //check if the action id exists in the addedItems
-       let existed_item = state.addedProductsToCart.find(item=> action.id === item.id)
-       if(existed_item)
-       {
-          addedItem.quantity += 1 
-          addedItem.changedPriceOfProduct = addedItem.quantity * addedItem.price;
-           return{
-              ...state,
-               totalAmountOfCart: state.totalAmountOfCart + addedItem.price 
-                }
-      }
-       else{
-          addedItem.quantity = 1;
-          //calculating the total
-          let newTotal = state.totalAmountOfCart + addedItem.price;
-          addedItem.changedPriceOfProduct = addedItem.quantity * addedItem.price; 
-          
-          return{
-              ...state,
-              addedProductsToCart: state.addedProductsToCart.concat(addedItem),
-              totalAmountOfCart : newTotal
-          }
-          
-      }
-  }
+        let existed_item;
+        for (let item in state.addedProductsToCart) {
+            if (state.addedProductsToCart[item]._id === action.id) {
+                existed_item = state.addedProductsToCart[item];
+            }
+        }
+        if (existed_item) {
+            addedItem.quantity += 1 
+            addedItem.changedPriceOfProduct = addedItem.quantity * addedItem.price;
+            alert("Thank You for purchasing the product");
+            return {
+                ...state,
+                totalAmountOfCart: state.totalAmountOfCart + addedItem.price
+            }
+        }
+        else {
+            addedItem.quantity = 1;
+            //calculating the total
+            let newTotal = state.totalAmountOfCart + addedItem.price;
+            addedItem.changedPriceOfProduct = addedItem.quantity * addedItem.price;
+            alert("Thank You for purchasing the product");
+            return {
+                ...state,
+                addedProductsToCart: [...state.addedProductsToCart,addedItem],
+                totalAmountOfCart: newTotal
+            }
+
+        }
+    }
     if (action.type === REMOVE_FROM_CART) {
-        let products_to_remove = state.addedProductsToCart.find(product => action.id === product.id);
-        let newProducts = state.addedProductsToCart.filter(product => action.id !== product.id);
+        let products_to_remove;
+        for (let item in state.addedProductsToCart) {
+            if (state.addedProductsToCart[item]._id === action.id) {
+                products_to_remove = state.addedProductsToCart[item];
+            }
+        }
+        let newProducts = state.addedProductsToCart.filter(product => action.id !== product._id);
         let newTotal = state.totalAmountOfCart - (products_to_remove.price * products_to_remove.quantity);
 
         return {
@@ -56,7 +70,12 @@ const cartReducer = (state = firstState, action) => {
         }
     }
     if (action.type === ADD_QUANTITY) {
-        let addedProduct = state.products.find(product => product.id === action.id);
+        let addedProduct;
+        for (let item in state.products) {
+            if (state.products[item]._id === action.id) {
+                addedProduct = state.products[item];
+            }
+        }
         addedProduct.quantity += 1;
         addedProduct.changedPriceOfProduct = addedProduct.price * addedProduct.quantity;
         let newTotal = state.totalAmountOfCart + addedProduct.price;
@@ -69,10 +88,15 @@ const cartReducer = (state = firstState, action) => {
         }
     }
     if (action.type === SUB_QUANTITY) {
-        let addedProduct = state.products.find(product => product.id === action.id)
+        let addedProduct;
+        for (let item in state.products) {
+            if (state.products[item]._id === action.id) {
+                addedProduct = state.products[item];
+            }
+        }
         //if the qt == 0 then it should be removed
         if (addedProduct.quantity === 1) {
-            let new_products = state.addedProductsToCart.filter(product => product.id !== action.id);
+            let new_products = state.addedProductsToCart.filter(product => product._id !== action.id);
 
             return {
                 ...state,
@@ -100,9 +124,11 @@ const cartReducer = (state = firstState, action) => {
         return {
             ...state,
             isLoggedIn: false,
+            addedProductsToCart : [],
+            totalAmountOfCart: 0,
         }
     }
-    if(action.type === FETCH_PRODUCT) {
+    if (action.type === FETCH_PRODUCT) {
         return {
             ...state,
             products: [],

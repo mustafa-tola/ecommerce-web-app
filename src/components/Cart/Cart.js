@@ -37,10 +37,10 @@ class Cart extends Component {
                                 <p><b>Price: {product.changedPriceOfProduct}$</b></p>
                                 <p><b>Quantity: {product.quantity}$</b></p>
                                 <div className="add-remove">
-                                    <Link to="/cart"><i className="material-icons" onClick={() => { this.handleAddedQuantity(product.id) }}>arrow_drop_up</i></Link>
-                                    <Link to="#"><i className="material-icons" onClick={() => { this.handleSubtractQuantity(product.id) }}>arrow_drop_down</i></Link>
+                                    <Link to="/cart"><i className="material-icons" onClick={() => { this.handleAddedQuantity(product._id) }}>arrow_drop_up</i></Link>
+                                    <Link to="#"><i className="material-icons" onClick={() => { this.handleSubtractQuantity(product._id) }}>arrow_drop_down</i></Link>
                                 </div>
-                                <button className="waves-effect waves-light btn pink remove" onClick={() => { this.handleRemove(product.id) }}>Remove</button>
+                                <button className="waves-effect waves-light btn pink remove" onClick={() => { this.handleRemove(product._id) }}>Remove</button>
                             </div>
                         </li>
                     )
